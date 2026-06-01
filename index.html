@@ -1,49 +1,82 @@
+
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bhartiya Brahmin Rishtey</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              saffron: {
-                50: '#fff7ed',
-                100: '#ffedd5',
-                200: '#fed7aa',
-                300: '#fdba74',
-                400: '#fb923c',
-                500: '#f97316',
-                600: '#ea580c',
-                700: '#c2410c',
-                800: '#9a3412',
-                900: '#7c2d12',
-              }
-            }
-          }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Bhartiya Rishtey - Premium Matrimonial & Matchmaking</title>
+    <meta name="description" content="Find your perfect life partner with Bhartiya Rishtey. Verified Elite Matchmaking ensuring safe, secure, and compatible matrimonial alliances.">
+    <link rel="icon" type="image/png" href="https://i.ibb.co/QkR4d95/1771246528579-136852f3-79f6-4e22-8047-6346bc2bd981.png" />
+
+    <!-- OpenGraph / Social Sharing Meta Tags -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Bhartiya Rishtey - Premium Matrimonial & Matchmaking">
+    <meta property="og:description" content="Find your perfect life partner with Bhartiya Rishtey. Verified Elite Matchmaking ensuring safe, secure, and compatible matrimonial alliances.">
+    <meta property="og:image" content="https://image2url.com/r2/default/images/1771246528579-136852f3-79f6-4e22-8047-6346bc2bd981.png">
+    <meta property="og:url" content="https://bhartiyarishtey.com">
+    <meta property="og:site_name" content="Bhartiya Rishtey">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Bhartiya Rishtey - Premium Matrimonial & Matchmaking">
+    <meta name="twitter:description" content="Find your perfect life partner with verified elite matchmaking.">
+    <meta name="twitter:image" content="https://image2url.com/r2/default/images/1771246528579-136852f3-79f6-4e22-8047-6346bc2bd981.png">
+    <!-- Theme Color for Mobile Browsers -->
+    <meta name="theme-color" content="#e11d48">
+    <!-- Preconnect to critical third-party origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://image2url.com" crossorigin>
+    <link rel="preconnect" href="https://i.ibb.co" crossorigin>
+    <link rel="preconnect" href="https://i.pravatar.cc" crossorigin>
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://image2url.com">
+    <link rel="dns-prefetch" href="https://i.ibb.co">
+
+    <!-- Preload LCP hero image with high priority -->
+    <link rel="preload" href="https://image2url.com/r2/default/images/1771246668410-13dd914e-f590-49f4-8cad-4ef71f2a33c1.jpg" as="image" fetchpriority="high">
+    <!-- Preload logo -->
+    <link rel="preload" href="https://image2url.com/r2/default/images/1771246528579-136852f3-79f6-4e22-8047-6346bc2bd981.png" as="image">
+
+    <!-- Font loading with swap to prevent FOIT -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            font-size: 14px;
+            line-height: 1.6;
         }
-      }
-    </script>
-    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
-  <script type="importmap">
-{
-  "imports": {
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.48.1"
-  }
-}
-</script>
+        @media (min-width: 768px) {
+            body {
+                font-size: 16px;
+            }
+        }
+        .bg-brand { background-color: #e11d48; } /* Rose 600 */
+        .text-brand { color: #e11d48; }
+        .border-brand { border-color: #e11d48; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #888; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* Responsive Typography & Images */
+        img, video {
+            max-width: 100%;
+            height: auto;
+        }
+        h1 { font-size: clamp(2.5rem, 5vw + 1rem, 4.5rem); }
+        h2 { font-size: clamp(1.8rem, 4vw + 1rem, 3rem); }
+        h3 { font-size: clamp(1.25rem, 2vw + 1rem, 1.75rem); }
+        h4 { font-size: clamp(1rem, 1.5vw + 0.5rem, 1.25rem); }
+    </style>
+
 <link rel="stylesheet" href="/index.css">
 </head>
-  <body class="bg-slate-50 text-slate-900">
+<body class="bg-gray-50 text-gray-900">
+    <noscript>
+      <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    </noscript>
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
+<script type="module" src="/index.tsx"></script>
 </body>
 </html>

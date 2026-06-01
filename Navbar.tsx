@@ -1,102 +1,153 @@
-import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Menu, X, LogOut, Shield } from 'lucide-react';
-import { UserRole } from '../types';
 
-export const Navbar: React.FC = () => {
-  const { user, logout } = useAuth();
-  const [isOpen, setIsOpen] = useState(false);
-  const location = useLocation();
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+
+interface NavbarProps {
+  isAuthenticated: boolean;
+  isAdmin: boolean;
+  onLogout: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ isAuthenticated, isAdmin, onLogout }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Helper to scroll to section if on home, or navigate home then scroll
-  const scrollToSection = (id: string) => {
-    if (location.pathname !== '/') {
-      navigate('/');
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) element.scrollIntoView({ behavior: 'smooth' });
-      }, 100);
-    } else {
-      const element = document.getElementById(id);
-      if (element) element.scrollIntoView({ behavior: 'smooth' });
+  const isHomePage = location.pathname === '/';
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 10);
+    };
+    if (isHomePage) {
+      window.addEventListener('scroll', handleScroll);
     }
-    setIsOpen(false);
+    return () => {
+      if (isHomePage) {
+        window.removeEventListener('scroll', handleScroll);
+      }
+    };
+  }, [isHomePage]);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  const navClass = isHomePage && !isScrolled && !isMenuOpen
+    ? 'bg-transparent text-white'
+    : 'bg-white text-gray-900 shadow-sm';
+
+  const handleLogoutClick = () => {
+    onLogout();
+    navigate('/');
   };
 
-  const navLinkClass = "text-slate-600 hover:text-saffron-600 font-medium cursor-pointer";
+  const MobileNavLinks = () => (
+    <div className="flex flex-col space-y-4 px-4 pt-4 pb-8">
+      {isAuthenticated ? (
+        <>
+          <Link to="/dashboard" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Dashboard</Link>
+          <Link to="/search" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Search</Link>
+          <Link to="/ai-studio" className="font-bold text-lg uppercase tracking-widest hover:text-brand">AI Studio</Link>
+          <Link to="/concierge" className="font-bold text-lg uppercase tracking-widest hover:text-brand text-brand">VIP Concierge</Link>
+          <Link to="/interests" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Interests</Link>
+          <Link to="/chat" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Chat</Link>
+          <Link to="/my-profile" className="font-bold text-lg uppercase tracking-widest hover:text-brand">My Profile</Link>
+          {isAdmin && (
+            <Link to="/admin" className="text-brand font-black text-lg uppercase tracking-widest">Admin Panel</Link>
+          )}
+          <button
+            onClick={handleLogoutClick}
+            className="text-left font-bold text-lg uppercase tracking-widest text-gray-500 hover:text-brand"
+          >
+            Logout
+          </button>
+        </>
+      ) : (
+        <>
+          <Link to="/login" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Login / Register</Link>
+          <Link to="/about-us" className="font-bold text-lg uppercase tracking-widest hover:text-brand">About Us</Link>
+          <Link to="/success-stories" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Success Stories</Link>
+          <Link to="/contact-us" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Contact Us</Link>
+          <Link to="/address" className="font-bold text-lg uppercase tracking-widest hover:text-brand">Address</Link>
+        </>
+      )}
+    </div>
+  );
 
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-20">
-          <div className="flex items-center">
-            <Link to="/" className="flex-shrink-0 flex items-center gap-3">
-              <img src="https://iili.io/fQUNGf9.md.jpg" alt="Bhartiya Brahmin Rishtey Logo" className="h-12 w-12 rounded-full object-cover border border-saffron-100" />
-              <span className="text-xl md:text-2xl font-serif font-bold text-slate-900">Bhartiya Brahmin Rishtey</span>
-            </Link>
-          </div>
-          
-          <div className="hidden md:flex md:items-center md:space-x-8">
-            <Link to="/" className={navLinkClass}>Home</Link>
-            <button onClick={() => scrollToSection('plans')} className={navLinkClass}>Membership Plans</button>
-            <button onClick={() => scrollToSection('benefits')} className={navLinkClass}>Benefits</button>
-            <button onClick={() => scrollToSection('community')} className={navLinkClass}>Community</button>
-            
-            {!user ? (
-              <div className="flex items-center space-x-4 ml-4">
-                <Link to="/login" className="text-slate-900 font-medium hover:text-saffron-600">Login</Link>
-                <Link to="/help" className="text-slate-900 font-medium hover:text-saffron-600">Help</Link>
-                <Link to="/register" className="px-6 py-2.5 text-sm font-bold text-white bg-pink-600 rounded-md hover:bg-pink-700 transition-colors shadow-lg shadow-pink-600/20">Register Free</Link>
-              </div>
-            ) : (
-              <div className="flex items-center space-x-6 ml-4">
-                 <Link to="/dashboard" className="text-slate-900 font-medium hover:text-saffron-600">Dashboard</Link>
-                 <div className="flex items-center space-x-2 bg-slate-50 px-3 py-1.5 rounded-full border border-slate-200">
-                    <span className="text-sm text-slate-700 font-medium flex items-center gap-1">
-                      {user.role === UserRole.VIP && <Shield size={14} className="text-yellow-500 fill-yellow-500" />}
-                      {user.name.split(' ')[0]}
-                    </span>
-                 </div>
-                <button onClick={logout} className="text-slate-500 hover:text-red-600" title="Logout">
-                  <LogOut size={20} />
-                </button>
-              </div>
-            )}
-          </div>
+    <>
+      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${navClass}`}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between h-20 items-center">
+            <div className="flex items-center">
+              <Link to="/" className="flex items-center gap-3">
+                <img src="https://image2url.com/r2/default/images/1771246528579-136852f3-79f6-4e22-8047-6346bc2bd981.png" alt="Bhartiya Rishtey Logo" className="h-12 w-12" />
+                <div>
+                  <div className="font-extrabold text-xl tracking-tight">Bhartiya Rishtey</div>
+                  <div className={`text-[10px] font-bold tracking-[0.2em] uppercase ${isHomePage && !isScrolled ? 'text-gray-300' : 'text-gray-400'}`}>Rishtey • Since 2016</div>
+                </div>
+              </Link>
+            </div>
 
-          <div className="flex items-center md:hidden">
-            <button onClick={() => setIsOpen(!isOpen)} className="text-slate-500 hover:text-saffron-600 p-2">
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-8">
+              {isAuthenticated ? (
+                <>
+                  <Link to="/dashboard" className="font-bold text-sm uppercase tracking-widest hover:text-brand">Dashboard</Link>
+                  <Link to="/search" className="font-bold text-sm uppercase tracking-widest hover:text-brand">Search</Link>
+                  <Link to="/interests" className="font-bold text-sm uppercase tracking-widest hover:text-brand">Interests</Link>
+                  {isAdmin && (
+                    <Link to="/admin" className="text-brand font-black text-sm uppercase tracking-widest">Admin</Link>
+                  )}
+                  <Link to="/my-profile" className="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full hover:bg-gray-200 transition">
+                    <div className="w-8 h-8 rounded-full bg-brand/20 flex items-center justify-center text-brand">
+                      <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0 0-10 5 5 0 0 0 0 10zm0 2c-5.33 0-8 2.67-8 4v1h16v-1c0-1.33-2.67-4-8-4z" /></svg>
+                    </div>
+                    <span className="text-xs font-black uppercase tracking-widest text-gray-900">My Profile</span>
+                  </Link>
+                  <button
+                    onClick={handleLogoutClick}
+                    className="text-xs font-black uppercase tracking-[0.2em] text-gray-400 hover:text-brand"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <div className="flex items-center gap-6">
+                  <Link to="/login" className={`text-xs font-black uppercase tracking-[0.2em] transition-colors ${isHomePage && !isScrolled ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>Login / Register</Link>
+                  <Link to="/about-us" className={`text-xs font-black uppercase tracking-[0.2em] transition-colors ${isHomePage && !isScrolled ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>About Us</Link>
+                  <Link to="/success-stories" className={`text-xs font-black uppercase tracking-[0.2em] transition-colors ${isHomePage && !isScrolled ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>Success Stories</Link>
+                  <Link to="/contact-us" className={`text-xs font-black uppercase tracking-[0.2em] transition-colors ${isHomePage && !isScrolled ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>Contact Us</Link>
+                  <Link to="/address" className={`text-xs font-black uppercase tracking-[0.2em] transition-colors ${isHomePage && !isScrolled ? 'text-white/80 hover:text-white' : 'text-gray-500 hover:text-gray-900'}`}>Address</Link>
+                </div>
+              )}
+            </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 rounded-lg hover:bg-gray-100">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16m-7 6h7"} />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-white border-t border-slate-100 absolute w-full shadow-lg">
-          <div className="px-4 pt-2 pb-6 space-y-2">
-             <Link to="/" className="block py-2 text-base font-medium text-slate-700 hover:text-saffron-600" onClick={() => setIsOpen(false)}>Home</Link>
-             <button onClick={() => scrollToSection('plans')} className="block w-full text-left py-2 text-base font-medium text-slate-700 hover:text-saffron-600">Membership Plans</button>
-             <button onClick={() => scrollToSection('benefits')} className="block w-full text-left py-2 text-base font-medium text-slate-700 hover:text-saffron-600">Benefits</button>
-             <button onClick={() => scrollToSection('community')} className="block w-full text-left py-2 text-base font-medium text-slate-700 hover:text-saffron-600">Community</button>
-             
-             {!user ? (
-               <div className="pt-4 flex flex-col space-y-3">
-                  <Link to="/login" className="block text-center py-2 text-base font-medium text-slate-700 border border-slate-300 rounded-md" onClick={() => setIsOpen(false)}>Login</Link>
-                  <Link to="/register" className="block text-center py-2 text-base font-bold text-white bg-pink-600 rounded-md" onClick={() => setIsOpen(false)}>Register Free</Link>
-               </div>
-             ) : (
-               <div className="pt-4 border-t border-slate-100 mt-2">
-                 <Link to="/dashboard" className="block py-2 text-base font-medium text-slate-700" onClick={() => setIsOpen(false)}>Dashboard</Link>
-                 <button onClick={() => { logout(); setIsOpen(false); }} className="block w-full text-left py-2 text-base font-medium text-red-600">Logout</button>
-               </div>
-             )}
+        {/* Mobile Menu Drawer */}
+        {isMenuOpen && (
+          <div className="md:hidden bg-white text-gray-900 shadow-lg">
+            <MobileNavLinks />
           </div>
-        </div>
-      )}
-    </nav>
+        )}
+      </nav>
+      {/* Spacer to prevent content from being hidden behind fixed navbar */}
+      <div className="h-20" />
+    </>
   );
 };
+
+export default Navbar;

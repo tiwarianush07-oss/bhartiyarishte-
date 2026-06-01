@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Prevent indexing of specific admin or private routes if they existed
+Disallow: /cgi-bin/
+Disallow: /admin/
+Disallow: /*?*session_id=* 
+
+# Point crawlers to the XML Sitemap
+Sitemap: https://example.com/sitemap.xml

@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Disallow access to typical private elements
+Disallow: /cgi-bin/
+Disallow: /private/
+Disallow: /*?*theme=* 
+
+# Point crawlers to the XML Sitemap
+Sitemap: https://example.com/sitemap.xml

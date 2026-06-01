@@ -1,5 +1,8 @@
 {
-  "name": "Bhartiya Brahmin Rishtey",
-  "description": "Exclusive matrimonial platform for the Brahmin community with strict verification and role-based access.",
-  "requestFramePermissions": []
+  "name": "1. 3 Copy of Bhartiya Rishtey - Elite Matrimonial Platform",
+  "description": "A production-grade, secure Indian matrimonial platform with WhatsApp OTP, premium subscriptions, and AI-powered matchmaking.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
 }
